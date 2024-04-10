@@ -61,6 +61,7 @@ const getSingleUser = (
         if (err) {
           reject(err);
         } else {
+          console.log('response1', response.body.data);
           const user = response.body.data.userById;
           expect(user.id).toBe(id);
           expect(user).toHaveProperty('user_name');

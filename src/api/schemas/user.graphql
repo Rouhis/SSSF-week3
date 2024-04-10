@@ -2,3 +2,22 @@
 # User: id, user_name, email
 # Query: users, userById
 # Mutation: createUser, updateUser, deleteUser
+
+scalar Datetime
+
+type User {
+  id: ID
+  user_name: String
+  email: String
+}
+
+type Query {
+  users: [User]
+  userById(id: ID!): User
+}
+
+type Mutation {
+  createUser(user_name: String, email: String): User
+  updateUser(user_name: String, email: String): User
+  deleteUser(id: ID!): User
+}

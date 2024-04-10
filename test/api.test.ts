@@ -48,6 +48,7 @@ describe('Testing graphql api', () => {
 
   it('should create a new user', async () => {
     user = await postUser(app, testUser);
+    console.log('testuserpost', user);
   });
 
   // test get all users
