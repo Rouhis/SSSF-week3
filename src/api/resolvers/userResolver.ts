@@ -46,7 +46,14 @@ export default {
       console.log('args', args);
       console.log('args.user', args);
       const user = await userModel.create(args);
-      return {message: 'User created successfully', user};
+      if (!user) {
+        return {
+          message: 'Error while creating user',
+        };
+      } else {
+        console.log('user', user);
+        return {message: 'User created successfully', user};
+      }
     },
     updateUser: async (
       _parent: undefined,
@@ -66,8 +73,8 @@ export default {
     },
     deleteUser: async (
       _parent: undefined,
-      args: {id: string}
-    ): Promise<{message: string}> => {
+      args: {id: string; user: Omit<User, '_id'>}
+    ): Promise<{message: string; user?: User}> => {
       const user = await userModel.findByIdAndDelete(args.id);
       if (!user) {
         throw new GraphQLError('User not found', {
@@ -76,7 +83,7 @@ export default {
           },
         });
       }
-      return {message: 'User deleted successfully'};
+      return {message: 'User deleted successfully', user};
     },
   },
 };

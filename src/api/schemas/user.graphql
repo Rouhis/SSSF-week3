@@ -16,8 +16,12 @@ type Query {
   userById(id: ID!): User
 }
 
+type UserMessage{
+  message: String
+  user: User
+}
 type Mutation {
-  createUser(user_name: String, email: String): User
-  updateUser(user_name: String, email: String): User
-  deleteUser(id: ID!): User
+  createUser(user_name: String, email: String): UserMessage
+  updateUser(id:String, user_name: String, email: String): UserMessage
+  deleteUser(id: ID!): UserMessage
 }

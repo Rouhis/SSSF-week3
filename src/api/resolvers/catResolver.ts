@@ -59,9 +59,9 @@ export default {
     ): Promise<{message: string; cat?: Cat}> => {
       const cat = await catModel.create(args.cat);
       if (cat) {
-        return {message: 'Cat added', cat};
+        return {message: 'Cat created', cat};
       } else {
-        return {message: 'Cat not added'};
+        return {message: 'Cat not created'};
       }
     },
     updateCat: async (

@@ -61,7 +61,6 @@ const getSingleUser = (
         if (err) {
           reject(err);
         } else {
-          console.log('response1', response.body.data);
           const user = response.body.data.userById;
           expect(user.id).toBe(id);
           expect(user).toHaveProperty('user_name');
@@ -90,11 +89,14 @@ const postUser = (
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
-        query: `mutation CreateUser($userName: String!, $email: String!) {
+        query: `mutation CreateUser($userName: String, $email: String) {
           createUser(user_name: $userName, email: $email) {
-            email
-            id
-            user_name
+            message
+            user {
+              id
+              email
+              user_name
+            }
           }
         }`,
         variables: {
@@ -109,8 +111,8 @@ const postUser = (
           const user = response.body.data.createUser;
           expect(user.user_name).toBe(user.user_name);
           expect(user.email).toBe(user.email);
-          expect(user).toHaveProperty('id');
-          resolve(response.body.data.createUser);
+          expect(user.user).toHaveProperty('id');
+          resolve(response.body.data.createUser.user);
         }
       });
   });
@@ -132,11 +134,14 @@ const putUser = (url: string | Function, id: string) => {
       .post('/graphql')
       .set('Content-type', 'application/json')
       .send({
-        query: `mutation UpdateUser($userName: String, $updateUserId: ID!) {
-          updateUser(user_name: $userName, id: $updateUserId) {
-            email
-            id
-            user_name
+        query: `mutation UpdateUser($userName: String, $email: String, $updateUserId: String) {
+          updateUser(user_name: $userName, email: $email, id: $updateUserId) {
+            message
+            user {
+              email
+              id
+              user_name
+            }
           }
         }`,
         variables: {
@@ -148,7 +153,7 @@ const putUser = (url: string | Function, id: string) => {
         if (err) {
           reject(err);
         } else {
-          const user = response.body.data.updateUser;
+          const user = response.body.data.updateUser.user;
           expect(user.user_name).toBe(newValue);
           expect(user).toHaveProperty('id');
           expect(user).toHaveProperty('email');
@@ -179,9 +184,12 @@ const deleteUser = (
       .send({
         query: `mutation DeleteUser($deleteUserId: ID!) {
           deleteUser(id: $deleteUserId) {
-            email
-            id
-            user_name
+            message
+            user {
+              id
+              user_name
+              email
+            }
           }
         }`,
         variables: {
@@ -192,7 +200,7 @@ const deleteUser = (
         if (err) {
           reject(err);
         } else {
-          const user = response.body.data.deleteUser;
+          const user = response.body.data.deleteUser.user;
           expect(user.id).toBe(id);
           resolve(response.body.data.deleteUser);
         }
